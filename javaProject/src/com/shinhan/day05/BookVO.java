@@ -1,4 +1,4 @@
-package com.shinhan.day04;
+package com.shinhan.day05;
 
 
 //업무 로직은 없다.
@@ -22,9 +22,9 @@ public class BookVO {
 	//관례상 상수는 대문자로 쓴다.
 	static final String PUBLISHER = "한빛";
 	
-	BookVO(String title, int price){
+	public BookVO(String title, int price){
 		super();
-		System.out.println("day04에 있는 BookVO");
+		System.out.println("day05에 있는 BookVO");
 		this.title = title;
 		this.price = price;
 		isbn2 =  title+"678910";

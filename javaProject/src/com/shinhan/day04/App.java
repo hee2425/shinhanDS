@@ -53,7 +53,7 @@ public class App {
 		System.out.println(cal.getModel());
 		System.out.println(cal.getColor());
 		System.out.println(cal.getPrice());
-		cal.powerOn();0
+		cal.powerOn();
 		cal.powerOff();
 		System.out.println(cal.add(1,2));
 		System.out.println(cal.add(1, 2));
