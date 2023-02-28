@@ -7,11 +7,11 @@ public class Lab1 {
 	public static void main(String[] args) {
 //		method1();
 //		method2();
-//		method3();
+		method3();
 		
 	}
 
-	private static void method3() {
+	public static void method3() {
 		Scanner sc = new Scanner(System.in);
 		System.out.print("숫자 입력 : ");
 		int su = sc.nextInt();
