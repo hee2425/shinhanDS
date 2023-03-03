@@ -27,7 +27,7 @@ public class SortTest {
 			}
 		
 		});
-		print("가격asc, 가격 desc after",car);
+		print("가격 asc, 가격 desc after",car);
 	}
 	private static void print(String title, Car[] arr) {
 		System.out.println("======"+title+"======");
