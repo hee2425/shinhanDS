@@ -1,6 +1,8 @@
 package com.shinhan.day04;
 
-public class Employee {
+import java.util.Objects;
+
+public class Employee implements Comparable<Employee>{
 	private  String name;
 	private  String title;
 	private int baseSalary;
@@ -34,5 +36,40 @@ public class Employee {
 		getTotalSalary();
 		 System.out.println(title + "직급의 " + name+"씨의 본봉은 "+baseSalary+" 원이고 총급여는 "+totalSalary+" 원입니다.");
 	}
+
+	@Override
+	public String toString() {
+		return "Employee [name=" + name + ", title=" + title + ", baseSalary=" + baseSalary + ", totalSalary="
+				+ totalSalary + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, title);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Employee other = (Employee) obj;
+		return Objects.equals(name, other.name) && Objects.equals(title, other.title);
+	}
+
+	@Override
+	public int compareTo(Employee emp) {
+		int result = name.compareTo(emp.name)*-1;
+		int result2 = baseSalary-emp.baseSalary;
+		if(result2==0) return title.compareTo(emp.title);
+		if(result ==0) return result2;
+		return result;
+	}
+
+	
+	
 
 }
