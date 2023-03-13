@@ -1,0 +1,211 @@
+/*1. 급여가 15000 이상인 직원들의 이름, 급여, 부서id를 조회하시오.*/
+
+select first_name, salary, department_id
+from employees
+where salary>=15000
+
+
+
+/*2. 직원 중에서 연봉이 170000 이상인 직원들의 이름, 연봉을 조회하시오.
+   연봉은 급여(salary)에 12를 곱한 값입니다.*/
+
+select first_name, salary*12 aa
+from employees
+where salary*12>=170000;
+
+
+--nulll은 값이 없다. 이므로 =연산자로 비교불가
+/*3. 직원 중에서 부서id가 없는 직원의 이름과 급여를 조회하시오.*/
+
+select first_name, salary
+from employees
+where department_id is null;
+
+
+
+/*4. 2004년 이전에 입사한 직원의 이름, 급여, 입사일을 조회하시오.*/
+select First_name, salary, hire_date
+from employees
+where hire_date<='2004/12/31';  --자동형변환제공
+
+select First_name, salary, hire_date
+from employees
+where to_char(hire_date,'yyyy');  
+
+
+
+-- 논리연산자 -- 
+-- and가 or보다 먼저 수행
+--1. 80, 50 번 부서에 속해있으면서 급여가 13000 이상인 직원의 이름, 급여, 부서id
+--를 조회하시오.
+select first_name, salary, hire_date
+from employees
+where (department_id=80 or department_id=50) and salary>=13000;
+
+select first_name, salary, hire_date
+from employees
+where department_id in(50,80) and salary>=13000;
+
+
+--2. 2005년 이후에 입사한 직원들 중에서 급여가 1300 이상 20000 이하인 직원들의 
+--이름, 급여, 부서id, 입사일을 조회하시오.
+select first_name, salary, department_id, hire_date
+from employees
+where to_char(hire_date,'yyyy')>='2005' and(salary >=1300 and salary<=20000);  
+
+select first_name, salary, department_id, hire_date
+from employees
+where to_char(hire_date,'yyyy')>='2005' and salary between 1300 and 20000;
+
+--111번 직원의 급여7700이엇음 100으로 수정하기
+update employees
+set salary = 7700, hire_date = '2005/09/30'
+where employee_id = 111;
+commit;
+
+-- SQL 비교연산자 --
+
+
+3. 2005년도 입사한 직원의 정보만 출력하시오.
+select first_name, salary, department_id, hire_date
+from employees
+where to_char(hire_date,'yyyy')=2500; --자동형변환
+
+
+---
+select * from v$nls_parameters;
+--NLS_CHARACTERSET
+select lengthb('oracle'), lengthb('오라클')
+from dual;
+
+2.  87년도에 입사한 직원을 알아내기 위해 SUBSTR 함수를 이용하여 HIREDATE 컬럼에서 첫 글자부터 2개를 추출하여 그 값이 87인지를 체크하는 방법으로도 구해 보도록 하세요.
+select *
+from employees
+where SUBSTR(hire_date, 1, 2) = '05';
+
+3.  다음은 이름이 E로 끝나는 사원을 검색해 보도록 합시다. SUBSTR 함수를 이용하여 ENAME 컬럼의 마지막 문자 한개만 추출해서 이름이 E로 끝나는 사원을 검색해 보도록 하시오.
+<힌트> 시작 위치를 -1로 주고 추출할 문자 개수를 1로 주면 됩니다. 
+select *
+from employees
+where SUBSTR(first_name, -1) = 'e';
+
+4. 이름이 D로 시작하는 직원의 이름, 급여, 입사일을 조회하시오.
+select first_name, salary, hire_date
+from employees
+where SUBSTR(first_name, 1)='D';
+
+
+5. 12월에 입사한 직원의 이름, 급여, 입사일을 조회하시오.
+--00/00/00
+select *
+from employees
+where SUBSTR(hire_date, 4, 2) = '12';
+
+select *
+from employees
+where to_char(hire_date,'mm') = '12';
+
+
+--index찾기 instr(대상, 찾을글자, 시작위치, 몇번째 발견)
+select first_name, instr(first_name, 'a'), instr(first_name, 'a',2)
+from employees;
+
+6. 이름에 le 가 들어간 직원의 이름, 급여, 입사일을 조회하시오.
+select first_name, salary, hire_date
+from employees
+where first_name like '%le%';
+
+
+
+7. 이름이 m으로 끝나는 직원의 이름, 급여, 입사일을 조회하시오.
+select first_name, salary, hire_date
+from employees
+where first_name like '%m';
+
+--와일드 카드_, LIKE연산자 사용
+8. 이름의 세번째 글자가 r인 이름, 급여, 입사일을 조회하시오.
+select first_name, salary, hire_date
+from employees
+where first_name like '__r%';
+
+select first_name, salary, hire_date
+from employees
+where substr(first_name, 3,1) = 'r';
+
+
+
+9. 커미션을 받는 직원의 이름, 커미션, 급여를 조회하시오.
+select first_name, salary, commission_pct
+from employees
+where commission_pct is not null;
+
+10. 커미션을 받지 않는 직원의 이름, 커미션, 급여를 조회하시오.
+select first_name, salary, commission_pct
+from employees
+where commission_pct is null;
+
+11. 2000년대에 입사해서 30, 50, 80 번 부서에 속해있으면서, 
+급여를 5000 이상 17000 이하를 받는 직원을 조회하시오. 
+단, 커미션을 받지 않는 직원들은 검색 대상에서 제외시키며, 먼저 입사한 직원이 
+먼저 출력되어야 하며 입사일이 같은 경우 급여가 많은 직원이 먼저 출력되록 하시오.
+select first_name, salary, commission_pct,substr(to_char(hire_date,'yyyy'),1,1), hire_date
+from employees
+where substr(to_char(hire_date,'yyyy'),1,1) = 2
+    and department_id in (30,50,80) 
+    and salary between 5000 and 17000 
+    and commission_pct is not null
+order by hire_date, salary desc;
+--asc : null이 뒤에 나오는 정책
+
+select*
+from employees
+order by commission_pct nulls first; --null이 앞에 나오게 
+
+select *
+from employees
+order by commission_pct desc nulls last;  --desc는 null이 앞에 나오나 뒤에 나오게 바꿈
+
+
+1. 이름이 'adam' 인 직원의 급여와 입사일을 조회하시오.
+select first_name,salary, hire_date
+from employees
+where lower(first_name) ='adam';
+
+
+desc countries;
+select * from tab;
+
+2. 나라 명이 'united states of america' 인 나라의 국가 코드를 조회하시오.
+select country_name, country_id
+from countries
+where lower(country_name) = 'united states of america';
+
+
+3. 'Adam의 입사일은 95/11/02 이고, 급여는 7000 입니다.' 이런 식으로 직원
+정보를 조회하시오.
+select first_name||'의 입사일은 '||hire_date||'이고, 급여는 '||salary||'입니다.'
+from employees;
+
+
+
+4. 이름이 5글자 이하인 직원들의 이름, 급여, 입사일을 조회하시오.
+select first_name, salary, hire_date
+from employees
+where length(first_name)<=5;
+
+
+
+5.2006년도에 입사한 직원의 이름, 입사일을 조회하시오.
+select first_name, hire_date
+from employees
+where to_char(hire_date,'yyyy') = '2006';
+
+
+
+desc employees
+6. 7년 이상 장기 근속한 직원들의 이름, 입사일, 급여, 근무년차를 조회하시오.
+select first_name, hire_date
+from employees
+where sysdate-hire_date >=7;
+
+
