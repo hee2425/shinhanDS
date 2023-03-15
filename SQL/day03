@@ -530,9 +530,74 @@ where (department_id, salary) in (
 ​
 -- 6번
 -- 직원의 이름, 부서id, 급여를 조회하시오. 그리고 직원이 속한 해당 부서의 최소급여를 마지막에 포함시켜 출력 하시오.
+-- 스칼라 서브쿼리, 상관형 서브쿼리
 select first_name, department_id, salary, (
 select min(salary) from employees emp2
 where emp2.department_id = emp1.department_id) 최소급여
 from employees emp1;
 
---
+
+
+--Inline View와 Top-N SubQuery
+
+--1.급여를 가장 많이 받는 상위 5명의 직원 정보를 조회하시오.
+--pseudo 컬럼(슈도 컬럼) : 실제 컬럼이 아닌데 칼럼인것처럼 행동하는 객체
+
+
+--mysql
+select rownum, first_name, salary
+form employees
+order by salary desc limit 5;
+
+--oracle
+select rownum, aa.*
+from (select rownum, first_name, salary from employees
+order by salary desc)aa;
+
+
+select rownum , aa.*
+from (
+            select  first_name, salary
+            from employees
+            order by salary desc   ) aa
+where  rownum <= 5
+select *
+from(
+                select rownum rr , aa.*
+                from (
+                            select  first_name, salary
+                            from employees
+                            order by salary desc   ) aa
+ )
+ where rr between 5 and 10 ;
+ 
+ 
+ --2. 커미션을 가장 많이 받는 상위 3명의 직원 정보를 조회하시오
+ select rownum, aa.*
+ from(
+ select first_name, salary, commission_pct
+ from employees
+ order by commission_pct desc nulls last, salary desc)aa
+ where rownum<=3;
+ 
+select *
+ from (
+ select rownum rr, aa.*
+ from (select first_name, salary, commission_pct
+ from employees
+ order by commission_pct desc nulls last, salary desc) aa)bb
+ whrere rr=3;
+ 
+ 
+ --월별입사자 수를 조회하되, 입사자 수가 5명이상인 월만 출력하시오
+ select to_char(hire_date, 'mm') 월, count(*)"입사자수"
+ from employees
+ group by to_char(hire_date, 'mm')
+ having count(*)>=5;
+ 
+ --4.년도별 입사자수를 조회하시오
+ --단, 입사자수가 많은 년도부터 출력
+select to_char(hire_date, 'yyyy') yy, count(*)"입사자수"
+ from employees
+ group by to_char(hire_date, 'yyyy')
+ order by 2 desc;
